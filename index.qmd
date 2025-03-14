@@ -1,10 +1,13 @@
 ---
 title: ESS 330 Project Proposals
-authors:
-  - name: Norah Jones
-    affiliation: The University
-    roles: writing
+authors: 
+  - name: Sarah Culhane
+    affiliation: Colorado State University
     corresponding: true
+  - name: Archer Goodman
+    affiliation: Colorado State University
+  - name: McKenna Cooper
+    affiliation: Colorado State University
 bibliography: references.bib
 ---
 
