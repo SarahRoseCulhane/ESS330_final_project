@@ -36,3 +36,101 @@ csl: C:\Users\sarah\Downloads\apa.csl
 **Proposed methods:** For this project, I propose looking at two datasets provided by the Klamath Lakes Monitoring Data Package 2013-2019, which contains monitoring data for lakes and ponds at Crater Lake NP, Lassen Volcanic NP, and Redwood NSP. The datasets I am planning on using are InvertSpecies.csv, which holds data about species detected during invertebrate surveys, and RiparianCover.csv, which holds data about riparian cover at 15 semi equidistant points around the lake. Looking at both datasets, they both have the columns “Unit_Code”, “Park_Name”, “Lake_Code”, and “Start_date”, with a lot of the same information in the columns for both datasets. This, along with the fact that both datasets are part of the same data package and overarching project, tells me that the area that the data was collected was the same for both datasets, with some exceptions where data was collected for one set but not the other. To narrow down the scope, I plan to use just the data from Crater Lake National Park in the year 2018 in both data sets. As for the invertebrate dataset, I plan on filtering the data to just include the columns mentioned before as well as order and life stage, filtering the data to just invertebrates collected in the larva stage with no damage. I plan on cutting the riparian vegetation data to the appropriate columns as well and joining the two datasets, looking at each lake code and performing the appropriate tests to figure out what orders of macroinvertebrates were present in that waterbody and what the riparian cover looked like, drawing conclusions that either prove or disprove my hypothesis.
 
 **Expected outcomes:** I expect that results will support my hypothesis, disproving the null hypothesis that there is no association between benthic macroinvertebrate taxonomic richness and riparian cover in Crater Lake National Park.
+
+# Proposal #3
+
+**Title:** Double trouble for forests; Can bark beetle countermeasures increase the risk of fire?
+
+**Justification:** The forests of the continental United States are valuable natural resources. Whether they are used for balanced logging or preserved for conservation and recreation, it is in the best interest of the public and the government to preserve these forests and help increase their growth. In recent decades, America’s forests have been endangered on three fronts. In addition to the deforestation threat that most forests of the world face, our forests have also been ravaged by both wildfires and bark beetles for the last several decades. A myriad of practices and policies have been proposed, tested, rejected, and implemented to combat these disturbances (\@coops2008investigating, \@belanger1993management). Over many years, this has resulted in a relatively complex system of caring for our forests. But has this system, in its complexity, begun to fight itself? 
+
+**Research Objective/question/hypothesis:** In this study, we will test whether the presence of bark beetle countermeasures increase the risk of wildfire.
+
+**Proposed methods:** We will use GIS to determine if fire ignition points occurred within areas where bark beetle countermeasures were used, as well as data regarding tree mortality rates from both wildfire and bark beetles.
+
+**Expected outcomes:** We expect to prove that there is no connection between bark beetle practices and wildfire risk.
+
+# Proposal #4
+
+**Title:** Is water quality impacted by sea level rise?
+
+**Justification:** As temperatures and sea levels rise, there is increasing risk of erosion and damage to our coastlines. Many efforts have been made to relocate (\@mcglashan2003managed) or otherwise protect human life as critical infrastructure erodes. But there may be a danger that extends further inland. Freshwater quality is very important to life, both human and otherwise. The quality of said water can be affected by a frankly astonishing variety of factors, and can be difficult and costly to clean. As sea levels rise, saltwater may be intruding on coastal aquifers (\@barlow2010saltwater) and degrading the quality of water available for human use. This project aims to determine if there is any connection between sea level rise and water quality
+
+**Research Objective/question/hypothesis:** Is there a correlation between sea level rise and water quality?
+
+**Proposed Methods:** We will use data on water quality and data on sea level rise to determine if there is a negative correlation between water quality and sea level rise.
+
+**Expected Outcomes:**
+
+-   Identification of any correlation between sea level rise and declining water quality.
+
+-   Evidence of saltwater intrusion into coastal aquifers affecting freshwater resources.
+
+-   Insights into regional variations in water quality impacts.
+
+Findings that may inform future coastal water management and mitigation strategies.
+
+# Proposal \# 5
+
+**Title:** Investigating the Correlation Between Bromus tectorum Abundance and Wildfire Frequency in Colorado Rangelands
+
+**Justification:**
+
+The justification for this project lies in the significant ecological impact of Bromus tectorum (cheatgrass) on Colorado’s rangelands, particularly in relation to fire frequency and biodiversity loss. Cheatgrass is an invasive species that alters fire regimes by increasing fire intensity and frequency (\@bradley2018cheatgrass). This invasive grass is highly flammable and promotes larger, more frequent wildfires, which further facilitate its spread (\@monty2013fire). One major example is the Cameron Peak Fire, which burned over 208,000 acres in 2020, making it the largest wildfire in Colorado history. Cheatgrass has likely contributed to fire intensity in affected areas, and post-fire landscapes are at risk of further cheatgrass invasion, leading to decreased native plant diversity and altered ecosystem dynamics. Understanding the relationship between cheatgrass and fire is crucial for developing effective management strategies that protect biodiversity and mitigate fire risks in Colorado’s rangelands, especially in the case of inevitable future fires.
+
+**Research Objective/question/hypothesis:**
+
+[Objective:]{.underline} Determine whether an increase in cheatgrass abundance is correlated with higher wildfire frequency in Colorado rangelands.
+
+\
+[Research Question:]{.underline} How does the presence of cheatgrass influence wildfire occurrence and severity?
+
+\
+[Hypothesis:]{.underline} Areas with higher cheatgrass coverage experience more frequent and intense wildfires compared to regions with lower cheatgrass presence.
+
+**Proposed methods:**
+
+-   Use remote sensing data (MODIS/Landsat) to map cheatgrass distribution over time.
+
+-   Obtain wildfire occurrence data from USGS and state fire agencies.
+
+-   Perform spatial analysis to identify correlations between cheatgrass abundance and fire frequency.
+
+-   Use regression modeling to assess whether cheatgrass presence is a significant predictor of wildfire occurrence.
+
+**Expected outcomes:**
+
+-   An understanding of how recent cheatgrass management practices have reduced spread of the species
+
+-   A positive correlation between abundance of Bromus tectorum and frequency and intensity of fires.
+
+    # Proposal #6
+
+**Title:** Assessing the Impact of Earlier Snowmelt on Streamflow Patterns in Colorado’s Rocky Mountain Watersheds
+
+**Justification:**
+
+Snowmelt is a primary source of freshwater for ecosystems, agriculture, and urban water supplies in the western United States (\@luce2018effects). Due to rising temperatures and changing precipitation patterns, snowmelt is occurring earlier in the year, potentially altering seasonal streamflow dynamics. This shift may lead to lower late-summer water availability, increased drought stress, and disruptions in aquatic ecosystems (\@dudley2017trends). In Colorado, where population growth continues to increase water demand, projects like the Thornton Pipeline highlight the challenges of securing long-term water supplies for increasing populations. Earlier snowmelt can reduce late-season river flows, impacting both municipal water supplies and agricultural irrigation. Additionally, reduced snowpack threatens hydropower production and increases reliance on groundwater, which is not a sustainable solution. Understanding how shifting snowmelt patterns affect streamflow is critical for water resource management, flood prevention, and ecosystem conservation, especially as climate change intensifies water scarcity in the region.
+
+**Research Objective/question/hypothesis:**
+
+[Objective:]{.underline} Investigate the relationship between earlier snowmelt timing and streamflow patterns in Colorado’s Rocky Mountain watersheds.\
+\
+[Research Question:]{.underline} How does the timing of snowmelt impact seasonal streamflow trends in Colorado?\
+\
+[Hypothesis:]{.underline} Earlier snowmelt results in higher spring streamflow but reduced summer and fall water availability.
+
+**Proposed methods:**
+
+-   Obtain historical snowmelt timing data from SNOTEL and climate datasets.
+
+-   Collect streamflow data from USGS gauging stations in selected Colorado watersheds.
+
+-   Analyze trends in snowmelt timing and streamflow over multiple decades.
+
+-   Use statistical models (e.g., regression analysis) to assess correlations between snowmelt timing and seasonal flow variability.
+
+**Expected outcomes:**
+
+-   A strong relationship between early season snowmelt, snowpack, and late-summer water availability in Colorado.
+
+-   A clearer understanding of how changes in snowmelt timing affect seasonal water availability.
