@@ -9,7 +9,7 @@ authors:
   - name: McKenna Cooper
     affiliation: Colorado State University
 bibliography: references.bib
-csl: apa.csl
+csl: C:\Users\sarah\Downloads\apa.csl
 ---
 
 # Proposal #1
