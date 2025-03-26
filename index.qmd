@@ -9,13 +9,14 @@ authors:
   - name: McKenna Cooper
     affiliation: Colorado State University
 bibliography: references.bib
+csl: apa.csl
 ---
 
 # Proposal #1
 
 **Title:** Testing for a relationship between migratory shorebird abundance during stopovers at wetland habitats and anthropogenic externalities on local-scale wetland conditions.
 
-**Justification:** Wetlands provide critical stopover habitat for many migratory bird species to rest and replenish energy reserves needed for them to complete their migration. In the Northern Great plains, wetlands are particularly important for migratory shorebirds, providing stopover for birds that breed in northern parts of the Great Plains, the boreal forest, and Arctic tundra. However, the Great Plains has experienced a large amount of wetland loss from numerous anthropogenic factors, with agricultural conversion having the largest impact (Elmore et al., 2024). Currently, shorebird populations are declining, and while this is a widespread phenomenon, migratory species, most of which breed in the arctic and subarctic regions during the boreal summer and migrate to to temporal and tropical areas during the non-breeding season, are being hit harder than most (Conwell, 2010). The ultimate cause of this is unknown, but what is known is that humans have expanded their use of coastal ecosystems in recent years, impacting shorebirds in numerous ways, such as the claiming of intertidal and supratidal spaces. (Santos et al., 2023), warranting more research on the impact of anthropogenic externalities on shorebird abundance.
+**Justification:** Wetlands provide critical stopover habitat for many migratory bird species to rest and replenish energy reserves needed for them to complete their migration. In the Northern Great plains, wetlands are particularly important for migratory shorebirds, providing stopover for birds that breed in northern parts of the Great Plains, the boreal forest, and Arctic tundra. However, the Great Plains has experienced a large amount of wetland loss from numerous anthropogenic factors, with agricultural conversion having the largest impact (\@<https://doi.org/10.1002/wlb3.01132>). Currently, shorebird populations are declining, and while this is a widespread phenomenon, migratory species, most of which breed in the arctic and subarctic regions during the boreal summer and migrate to to temporal and tropical areas during the non-breeding season, are being hit harder than most (\@colwell2010shorebird). The ultimate cause of this is unknown, but what is known is that humans have expanded their use of coastal ecosystems in recent years, impacting shorebirds in numerous ways, such as the claiming of intertidal and supratidal spaces. (\@article), warranting more research on the impact of anthropogenic externalities on shorebird abundance.
 
 **Research Objective/question/hypothesis:** In this study, I aim to test the hypothesis that there is a relationship between local anthropogenic forces surrounding wetlands in the Northern Great Plains and the abundance of migratory shorebird species within those wetlands.
 
