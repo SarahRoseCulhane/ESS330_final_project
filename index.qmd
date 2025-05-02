@@ -133,32 +133,29 @@ Snowmelt is a primary source of freshwater for ecosystems, agriculture, and urba
 
 -   A clearer understanding of how changes in snowmelt timing affect seasonal water availability.
 
-Final report
+Final report coding stuff
+
 ```{r}
-#Loading Libraries
+# Load Libraries
 library(ggplot2)
 library(dplyr)
 library(tidymodels)
 library(parsnip)
-```
-```{r}
-#Load data
+library(vegan) # for calculating diversity indices
+
+# Load data
 invert_species <- read.csv("InvertSpecies (5).csv")
 riparian_cover <- read.csv("RiparianCover (3).csv")
 water_quality <- read.csv("WaterQuality (2).csv")
 
-```
-```{r}
-# Filter for Lassen Volcanic National Park and our year of 2013
+# Filter for Lassen Volcanic National Park and years 2013 and 2019
 invert_species_2013 <- invert_species %>%
   filter(Park_Name == "Lassen Volcanic National Park" & 
            (Start_Date >= as.Date("2013-01-01") & 
-           Start_Date <= as.Date("2013-12-31")) |
+           Start_Date <= as.Date("2013-12-31")) | 
            (Start_Date >= as.Date("2019-01-01") & 
            Start_Date <= as.Date("2019-12-31")))
 
-```
-```{r}
 riparian_cover_2013 <- riparian_cover %>%
   filter(Park_Name == "Lassen Volcanic National Park" & 
            (Start_Date >= as.Date("2013-01-01") & 
@@ -172,249 +169,141 @@ water_quality_2013 <- water_quality %>%
            Start_Date <= as.Date("2013-12-31")) |
            (Start_Date >= as.Date("2019-01-01") & 
            Start_Date <= as.Date("2019-12-31")))
+
 # Merge datasets
 merged_data_2013 <- invert_species_2013 %>%
   inner_join(riparian_cover_2013, by = c("Lake_Code", "Park_Name", "Start_Date")) %>%
   inner_join(water_quality_2013, by = c("Lake_Code", "Park_Name", "Start_Date"))
 
-```
-
-```{r}
-invert_species_2019 <- invert_species %>%
-  filter(Park_Name == "Lassen Volcanic National Park" & 
-           Start_Date >= as.Date("2019-01-01") & 
-           Start_Date <= as.Date("2019-12-31"))
-
-riparian_cover_2019 <- riparian_cover %>%
-  filter(Park_Name == "Lassen Volcanic National Park" & 
-           Start_Date >= as.Date("2019-01-01") & 
-           Start_Date <= as.Date("2019-12-31"))
-
-water_quality_2019 <- water_quality %>%
-  filter(Park_Name == "Lassen Volcanic National Park" & 
-           Start_Date >= as.Date("2019-01-01") & 
-           Start_Date <= as.Date("2019-12-31"))
-
-
-```
-```{r}
-# Merge datasets
-merged_data_2019 <- invert_species_2019 %>%
-  inner_join(riparian_cover_2019, by = c("Lake_Code", "Park_Name", "Start_Date")) %>%
-  inner_join(water_quality_2019, by = c("Lake_Code", "Park_Name", "Start_Date"))
-
-```
-
-```{r}
-#setting up some useful metrics, limiting data to stuff we need
-melded_data_2013 <- merged_data_2013 |>
-  mutate(EPT_taxa = ifelse(Order == "Ephemeroptera" |
-                             Order == "Plecoptera" |
-                             Order == "Trichoptera", 
-                           "Yes", "No"),
-         Veg_Cover = case_when(
-           Barren_AreaCcover == "sparse (<10%)" ~ 0.05,
-           Barren_AreaCcover == "moderate (10-40%)" ~ 0.25,
-           Barren_AreaCcover == "heavy (40-75%)" ~ 0.57,
-           Barren_AreaCcover == "very heavy (>75%)" ~ 0.87)) |>
-  summarize(Unit_Code, 
-            Park_Name, 
-            Lake_Code, 
-            Start_Date, 
-            Order, 
-            Count, 
-            EPT_taxa, 
-            Veg_Cover, 
-            Temperature_C,
-            Dissolved_oxygen, 
-            pH, 
-            Depth_m, 
-            Turbidity, 
-            )
-
-melded_data_2013 <- melded_data_2013 |>
-  group_by(Start_Date, Unit_Code) |>
+# Preparing data for diversity metrics calculation
+melded_data_2013 <- merged_data_2013 %>%
   mutate(
-    Yes_Total = sum(Count[EPT_taxa == "Yes"], na.rm = TRUE),
-    No_Total = sum(Count[EPT_taxa == "No"], na.rm = TRUE),
-    EPT_Score = Yes_Total / No_Total
-  ) |>
-  ungroup()
+    Veg_Cover = case_when(
+      Barren_AreaCcover == "sparse (<10%)" ~ 0.05,
+      Barren_AreaCcover == "moderate (10-40%)" ~ 0.25,
+      Barren_AreaCcover == "heavy (40-75%)" ~ 0.57,
+      Barren_AreaCcover == "very heavy (>75%)" ~ 0.87),
+    Order = as.factor(Order)  # Ensuring 'Order' is treated as a factor
+  )
 
+# Prepare for calculating Taxa Richness and Shannon-Wiener Diversity Index
+taxa_data <- melded_data_2013 %>%
+  group_by(Start_Date, Lake_Code) %>%
+  summarise(
+    Taxa_Richness = n_distinct(Order),  # Count unique Orders per sample
+    Shannon_Diversity = diversity(table(Order), index = "shannon"),  # Shannon-Wiener Index
+    .groups = 'drop'
+  )
+
+# Merge the diversity indices back with environmental variables
+melded_data_2013 <- melded_data_2013 %>%
+  inner_join(taxa_data, by = c("Start_Date", "Lake_Code"))
+
+# Checking the data structure
 glimpse(melded_data_2013)
 
-```
-```{r}
-#and the same for 2019
-melded_data_2019 <- merged_data_2019 |>
-  mutate(EPT_taxa = ifelse(Order == "Ephemeroptera" |
-                             Order == "Plecoptera" |
-                             Order == "Trichoptera", 
-                           "Yes", "No")) |>
-  summarize(Unit_Code, 
-            Park_Name, 
-            Lake_Code, 
-            Start_Date, 
-            Order, 
-            Count, 
-            EPT_taxa, 
-            Barren_AreaCcover, 
-            Temperature_C, 
-            Dissolved_oxygen, 
-            pH, 
-            Depth_m, 
-            Turbidity, 
-            )
-
-melded_data_2019 <- melded_data_2019 |>
-  group_by(Start_Date, Unit_Code) |>
-  mutate(
-    Yes_Total = sum(Count[EPT_taxa == "Yes"], na.rm = TRUE),
-    No_Total = sum(Count[EPT_taxa == "No"], na.rm = TRUE),
-    EPT_Score = Yes_Total / No_Total
-  ) |>
-  ungroup()
-#glimpse(melded_data_2013)
-
-```
-```{r}
-#Conduct a test. 
+# Proceeding with the modeling part, using Taxa_Richness as a target variable
 set.seed(15379)
-#used my old robotics team's number for the seed, easy for me to remember
-
-#We're gonna do this with just 2013 data for right now
-#giving my data splits catchy names 
 banana_split <- initial_split(melded_data_2013, prop = 0.8)
-#Chocolate > choochoo > train > training data
 choco_choochoo <- training(banana_split)
-#vanilla > vanilla ice > mic check "testing testing" > testing data
 vanilla_ice_mic <- testing(banana_split)
 
-#glimpse(choco_choochoo)
-
-#specifying a recipe
-sundae_recipe <- recipe(EPT_Score ~ 
-                          Start_Date +
+# Specify a recipe to preprocess data
+sundae_recipe <- recipe(Taxa_Richness ~ 
+                          Start_Date + 
                           Veg_Cover + 
                           Temperature_C + 
                           Dissolved_oxygen + 
                           pH + 
                           Depth_m + 
                           Turbidity, 
-                        data = choco_choochoo) |>
+                        data = choco_choochoo) %>%
   step_normalize(all_numeric_predictors())
 
-#specifying a model
-icecream_model <- rand_forest(mtry = tune(), trees = 250, min_n = 500) |>
-  set_engine("ranger") |>
+# Specify the model
+icecream_model <- rand_forest(mtry = tune(), trees = 250, min_n = 500) %>%
+  set_engine("ranger") %>%
   set_mode("regression")
 
-#creating workflow
-icecream_scoop <- workflow() |>
-  add_model(icecream_model) |>
+# Creating a workflow
+icecream_scoop <- workflow() %>%
+  add_model(icecream_model) %>%
   add_recipe(sundae_recipe)
 
-#testing the model with cross_validation
-#validating the process for making a new icecream flavor
+# Cross-validation process
 validated_process <- vfold_cv(vanilla_ice_mic, v = 5)
-#tuning the model
+
+# Tuning the model
 salt_to_taste <- tune_grid(
   icecream_scoop,
   resamples = validated_process,
   grid = 10
 )
 
-#selecting the best model
-#choosing the best formulas for the new icecream flavor
+# Selecting the best model based on RMSE
 best_flavor <- select_best(salt_to_taste, metric = "rmse")
 
-#finalizing the model
-#selecting the winning flavor
+# Finalizing the model
 final_flavor <- finalize_model(icecream_model, best_flavor)
 
-#workflow with finalized model
-#designing packaging for new flavor i guess?
-final_flav_package <- icecream_scoop |>
+# Final workflow with the best model
+final_flav_package <- icecream_scoop %>%
   finalize_workflow(best_flavor)
 
-#fitting the workflow to the training data
-#shipping the new flavor to the stores
-icecream_retail <- final_flav_package |>
+# Fitting the model to the training data
+icecream_retail <- final_flav_package %>%
   fit(data = choco_choochoo)
 
-#making predictions
-#seeing how the market reacts to the new flavor
-public_tastes <- predict(icecream_retail, new_data = vanilla_ice_mic) |>
+# Making predictions on test data
+public_tastes <- predict(icecream_retail, new_data = vanilla_ice_mic) %>%
   bind_cols(vanilla_ice_mic)
 
-#evaluating model performance
-#Leaving a review of the ice cream flavor i guess
-parlor_review <- public_tastes |>
-  metrics(truth = EPT_Score, estimate = .pred)
+# Evaluating model performance using RMSE
+parlor_review <- public_tastes %>%
+  metrics(truth = Taxa_Richness, estimate = .pred)
 
-#visualising model performance
-ggplot(public_tastes, aes(x = EPT_Score, y = .pred)) + 
+# Visualizing the predictions vs actual Taxa Richness
+ggplot(public_tastes, aes(x = Taxa_Richness, y = .pred)) + 
   geom_point(alpha = 0.5) + 
   geom_abline(linetype = "dashed", color = "blue") + 
-  labs(x = "Actual", y = "Predicted", title = "Predicted vs Actual")
-
-
+  labs(x = "Actual Taxa Richness", y = "Predicted", title = "Predicted vs Actual Taxa Richness")
 ```
 
 ```{r}
+# Load packages
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(reshape2)
 
-# Summarize total count by Order
-insect_order_counts_2019 <- melded_data_2019 %>%
-  group_by(Order) %>%
-  summarise(Total_Count = sum(Count, na.rm = TRUE)) %>%
-  arrange(desc(Total_Count))
+# ----- INSECT ORDER ABUNDANCE (2013 & 2019) -----
 
-# Plot it
-ggplot(insect_order_counts_2019, aes(x = reorder(Order, -Total_Count), y = Total_Count)) +
-  geom_col(fill = "darkolivegreen4") +
-  labs(
-    title = "Total Insect Count by Order (2019)",
-    x = "Insect Order",
-    y = "Total Count"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-
-```
-```{r}
-# Summarize 2013 data
 insect_order_counts_2013 <- melded_data_2013 %>%
   filter(Park_Name == "Lassen Volcanic National Park") %>%
   group_by(Order) %>%
   summarise(Total_Count = sum(Count, na.rm = TRUE)) %>%
   mutate(Year = 2013)
 
-# Summarize 2019 data
 insect_order_counts_2019 <- melded_data_2019 %>%
   filter(Park_Name == "Lassen Volcanic National Park") %>%
   group_by(Order) %>%
   summarise(Total_Count = sum(Count, na.rm = TRUE)) %>%
   mutate(Year = 2019)
 
-# Combine both
 insect_order_counts_combined <- bind_rows(insect_order_counts_2013, insect_order_counts_2019)
 
-# Plot
 ggplot(insect_order_counts_combined, aes(x = reorder(Order, -Total_Count), y = Total_Count, fill = factor(Year))) +
   geom_col(position = "dodge") +
   labs(
-    title = "Comparison of Insect Counts by Order: 2013 vs 2019",
-    x = "Insect Order",
-    y = "Total Count",
-    fill = "Year"
+    title = "Total Insect Counts by Order: 2013 vs 2019 (Lassen Volcanic NP)",
+    x = "Insect Order", y = "Total Count", fill = "Year"
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-```
-```{r}
-# Add year column to each dataset
+
+# ----- RIPARIAN COVER CATEGORIES -----
+
 barren_2013 <- merged_data_2013 %>%
   filter(Park_Name == "Lassen Volcanic National Park") %>%
   select(Barren_AreaCcover) %>%
@@ -425,86 +314,20 @@ barren_2019 <- merged_data_2019 %>%
   select(Barren_AreaCcover) %>%
   mutate(Year = 2019)
 
-# Combine both
 barren_combined <- bind_rows(barren_2013, barren_2019)
 
-# Plot
 ggplot(barren_combined, aes(x = Barren_AreaCcover, fill = factor(Year))) +
   geom_bar(position = "dodge") +
   labs(
-    title = "Barren Area Cover in Lassen Volcanic National Park (2013 vs 2019)",
-    x = "Barren Area Cover Category",
-    y = "Number of Observations",
-    fill = "Year"
+    title = "Riparian Cover Categories in Lassen Volcanic NP (2013 vs 2019)",
+    x = "Riparian Cover Category", y = "Frequency", fill = "Year"
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
-```
-```{r}
-# Select relevant water quality variables and year
-water_2013 <- melded_data_2013 %>%
-  select(Temperature_C, Dissolved_oxygen, pH, Depth_m, Turbidity) %>%
-  mutate(Year = "2013")
+# ----- WATER QUALITY BOX PLOTS -----
 
-water_2019 <- melded_data_2019 %>%
-  select(Temperature_C, Dissolved_oxygen, pH, Depth_m, Turbidity) %>%
-  mutate(Year = "2019")
-
-# Combine and pivot to long format
-water_combined <- bind_rows(water_2013, water_2019) %>%
-  pivot_longer(cols = -Year, names_to = "Variable", values_to = "Value")
-
-# Plot
-ggplot(water_combined, aes(x = Year, y = Value, fill = Year)) +
-  geom_boxplot(alpha = 0.7, outlier.shape = NA) +
-  facet_wrap(~ Variable, scales = "free_y") +
-  labs(
-    title = "Comparison of Water Quality Indicators (2013 vs 2019)",
-    x = "Year",
-    y = "Value"
-  ) +
-  theme_minimal() +
-  theme(legend.position = "none")
-
-```
-```{r}
-# Combine 2013 and 2019 data, filter, and select relevant columns
-cor_data_full <- bind_rows(
-  melded_data_2013 %>% mutate(Year = "2013"),
-  melded_data_2019 %>% mutate(Year = "2019")
-) %>%
-  filter(Park_Name == "Lassen Volcanic National Park") %>%
-  select(Temperature_C, Dissolved_oxygen, pH, EPT_Score, Veg_Cover) %>%
-  drop_na()
-
-# Compute correlation matrix
-cor_matrix_full <- cor(cor_data_full, use = "complete.obs")
-
-# Reshape for heatmap
-library(reshape2)
-cor_melt_full <- melt(cor_matrix_full)
-
-# Plot heatmap
-ggplot(cor_melt_full, aes(Var1, Var2, fill = value)) +
-  geom_tile(color = "white") +
-  scale_fill_gradient2(
-    low = "red", high = "blue", mid = "white",
-    midpoint = 0, limit = c(-1, 1),
-    name = "Correlation"
-  ) +
-  labs(
-    title = "Correlation Heatmap: Water Quality, EPT Score, and Barren Cover (Lassen Volcanic National Park)",
-    x = NULL, y = NULL
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-
-```
-```{r}
-# Combine data, reshape, and filter
 water_quality_box <- bind_rows(
   melded_data_2013 %>% mutate(Year = "2013"),
   melded_data_2019 %>% mutate(Year = "2019")
@@ -515,71 +338,229 @@ water_quality_box <- bind_rows(
   pivot_longer(cols = c(Temperature_C, Dissolved_oxygen, pH),
                names_to = "Metric", values_to = "Value")
 
-# Create box plot
 ggplot(water_quality_box, aes(x = Year, y = Value, fill = Year)) +
   geom_boxplot(alpha = 0.7, outlier.color = "black") +
   facet_wrap(~ Metric, scales = "free_y") +
   labs(
-    title = "Box Plots of Water Quality Metrics (Lassen Volcanic National Park)",
-    x = "Year",
-    y = "Value"
+    title = "Water Quality Metrics (Predictors of EPT Richness) in Lassen NP",
+    x = "Year", y = "Measured Value"
   ) +
   scale_fill_manual(values = c("2013" = "blue", "2019" = "orange")) +
   theme_minimal() +
   theme(text = element_text(size = 13), legend.position = "none")
 
-```
-```{r}
-# Combine and filter insect data
-taxa_counts_lassen <- bind_rows(
+
+# ----- CORRELATION HEATMAP (WITH EPT RICHNESS) -----
+
+# Calculate EPT richness
+ept_rich_data <- bind_rows(melded_data_2013, melded_data_2019) %>%
+  filter(Park_Name == "Lassen Volcanic National Park") %>%
+  filter(Order %in% c("Ephemeroptera", "Plecoptera", "Trichoptera")) %>%
+  group_by(Start_Date, Lake_Code) %>%
+  summarise(EPT_Richness = n_distinct(Order), .groups = "drop")
+
+# Join richness back to environmental data
+cor_data_full <- bind_rows(
   melded_data_2013 %>% mutate(Year = "2013"),
   melded_data_2019 %>% mutate(Year = "2019")
 ) %>%
   filter(Park_Name == "Lassen Volcanic National Park") %>%
-  group_by(Year, Order) %>%
-  summarize(Total_Count = sum(Count, na.rm = TRUE), .groups = "drop") %>%
-  filter(!is.na(Order))
+  group_by(Start_Date, Lake_Code) %>%
+  slice(1) %>%
+  ungroup() %>%
+  left_join(ept_rich_data, by = c("Start_Date", "Lake_Code")) %>%
+  select(Temperature_C, Dissolved_oxygen, pH, Veg_Cover, EPT_Richness) %>%
+  drop_na()
 
-# Plot bar graph
-ggplot(taxa_counts_lassen, aes(x = reorder(Order, -Total_Count), y = Total_Count, fill = Year)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(
-    title = "Insect Taxa by Order in Lassen Volcanic National Park (2013-2019)",
-    x = "Insect Order",
-    y = "Total Count"
+# Compute correlation matrix
+cor_matrix_full <- cor(cor_data_full, use = "complete.obs")
+cor_melt_full <- melt(cor_matrix_full)
+
+ggplot(cor_melt_full, aes(Var1, Var2, fill = value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(
+    low = "red", high = "blue", mid = "white",
+    midpoint = 0, limit = c(-1, 1),
+    name = "Correlation"
   ) +
-  scale_fill_manual(values = c("2013" = "purple", "2019" = "orange")) +
+  labs(
+    title = "Correlation Heatmap: EPT Richness and Environmental Variables",
+    x = NULL, y = NULL
+  ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-
 ```
+
 ```{r}
-# Summarize mean vegetative cover by year
-barren_bar_lassen <- bind_rows(
-  melded_data_2013 %>% mutate(Year = "2013"),
-  melded_data_2019 %>% mutate(Year = "2019")
-) %>%
-  filter(Park_Name == "Lassen Volcanic National Park") %>%
-  select(Year, Veg_Cover) %>%
-  drop_na() %>%
-  group_by(Year) %>%
-  summarize(Mean_Veg_Cover = mean(Veg_Cover, na.rm = TRUE), .groups = "drop")
+# Load Libraries
+library(ggplot2)
+library(dplyr)
+library(tidymodels)
+library(parsnip)
+library(vegan)
+library(tidyr)
+library(reshape2)
 
-# Bar plot
-ggplot(barren_bar_lassen, aes(x = Year, y = Mean_Veg_Cover, fill = Year)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  labs(
-    title = "Mean Vegetative Cover (Inverse of Barren Cover)",
-    subtitle = "Lassen Volcanic National Park (2013 vs 2019)",
-    x = "Year",
-    y = "Mean Vegetative Cover (Proportion)"
-  ) +
-  scale_fill_manual(values = c("2013" = "#91bfdb", "2019" = "#fc8d62")) +
+# Load data
+invert_species <- read.csv("InvertSpecies (5).csv")
+riparian_cover <- read.csv("RiparianCover (3).csv")
+water_quality <- read.csv("WaterQuality (2).csv")
+
+# Filter for Lassen Volcanic National Park and years 2013 and 2019
+invert_filtered <- invert_species %>%
+  filter(Park_Name == "Lassen Volcanic National Park" &
+           (as.Date(Start_Date) >= as.Date("2013-01-01") & as.Date(Start_Date) <= as.Date("2013-12-31") |
+            as.Date(Start_Date) >= as.Date("2019-01-01") & as.Date(Start_Date) <= as.Date("2019-12-31")))
+
+riparian_filtered <- riparian_cover %>%
+  filter(Park_Name == "Lassen Volcanic National Park" &
+           (as.Date(Start_Date) >= as.Date("2013-01-01") & as.Date(Start_Date) <= as.Date("2013-12-31") |
+            as.Date(Start_Date) >= as.Date("2019-01-01") & as.Date(Start_Date) <= as.Date("2019-12-31")))
+
+water_quality_filtered <- water_quality %>%
+  filter(Park_Name == "Lassen Volcanic National Park" &
+           (as.Date(Start_Date) >= as.Date("2013-01-01") & as.Date(Start_Date) <= as.Date("2013-12-31") |
+            as.Date(Start_Date) >= as.Date("2019-01-01") & as.Date(Start_Date) <= as.Date("2019-12-31")))
+
+# Merge datasets
+merged_data <- invert_filtered %>%
+  inner_join(riparian_filtered, by = c("Lake_Code", "Park_Name", "Start_Date")) %>%
+  inner_join(water_quality_filtered, by = c("Lake_Code", "Park_Name", "Start_Date"))
+
+# Add numeric riparian cover and convert Order
+merged_data <- merged_data %>%
+  mutate(
+    Veg_Cover = case_when(
+      Barren_AreaCcover == "sparse (<10%)" ~ 0.05,
+      Barren_AreaCcover == "moderate (10-40%)" ~ 0.25,
+      Barren_AreaCcover == "heavy (40-75%)" ~ 0.57,
+      Barren_AreaCcover == "very heavy (>75%)" ~ 0.87),
+    Order = as.factor(Order),
+    Year = ifelse(as.Date(Start_Date) < as.Date("2014-01-01"), 2013, 2019)
+  )
+
+# Calculate Taxa Richness and Shannon Diversity
+taxa_data <- merged_data %>%
+  group_by(Start_Date, Lake_Code) %>%
+  summarise(
+    Taxa_Richness = n_distinct(Order),
+    Shannon_Diversity = diversity(table(Order)),
+    .groups = 'drop'
+  )
+
+# Join diversity metrics
+merged_data <- merged_data %>%
+  inner_join(taxa_data, by = c("Start_Date", "Lake_Code"))
+
+# Split into 2013 and 2019 for visuals
+melded_data_2013 <- merged_data %>% filter(Year == 2013)
+melded_data_2019 <- merged_data %>% filter(Year == 2019)
+
+# --- Modeling EPT Richness with environmental variables ---
+
+set.seed(15379)
+split_data <- initial_split(merged_data, prop = 0.8)
+train_data <- training(split_data)
+test_data <- testing(split_data)
+
+recipe_model <- recipe(Taxa_Richness ~ Start_Date + Veg_Cover + Temperature_C + Dissolved_oxygen + pH + Depth_m + Turbidity, data = train_data) %>%
+  step_normalize(all_numeric_predictors())
+
+model_spec <- rand_forest(mtry = tune(), trees = 250, min_n = 500) %>%
+  set_engine("ranger") %>%
+  set_mode("regression")
+
+workflow_model <- workflow() %>%
+  add_model(model_spec) %>%
+  add_recipe(recipe_model)
+
+cv_folds <- vfold_cv(test_data, v = 5)
+
+tune_results <- tune_grid(
+  workflow_model,
+  resamples = cv_folds,
+  grid = 10
+)
+
+best_model <- select_best(tune_results, metric = "rmse")
+final_model <- finalize_model(model_spec, best_model)
+final_workflow <- workflow_model %>% finalize_workflow(best_model)
+
+fitted_model <- final_workflow %>% fit(data = train_data)
+
+predictions <- predict(fitted_model, new_data = test_data) %>%
+  bind_cols(test_data)
+
+predictions %>%
+  metrics(truth = Taxa_Richness, estimate = .pred)
+
+# --- Visualizations ---
+
+# Insect Order Abundance
+order_counts <- merged_data %>%
+  group_by(Year, Order) %>%
+  summarise(Total_Count = sum(Count, na.rm = TRUE), .groups = "drop")
+
+ggplot(order_counts, aes(x = reorder(Order, -Total_Count), y = Total_Count, fill = factor(Year))) +
+  geom_col(position = "dodge") +
+  labs(title = "Total Insect Counts by Order: 2013 vs 2019", x = "Insect Order", y = "Total Count", fill = "Year") +
   theme_minimal() +
-  theme(text = element_text(size = 13), legend.position = "none")
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+# Riparian Cover Categories
+riparian_combined <- merged_data %>%
+  select(Barren_AreaCcover, Year)
 
-```
+ggplot(riparian_combined, aes(x = Barren_AreaCcover, fill = factor(Year))) +
+  geom_bar(position = "dodge") +
+  labs(title = "Riparian Cover Categories in Lassen NP", x = "Cover Category", y = "Count", fill = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Water Quality Box Plots
+water_quality_long <- merged_data %>%
+  select(Temperature_C, Dissolved_oxygen, pH, Year) %>%
+  drop_na() %>%
+  pivot_longer(cols = c(Temperature_C, Dissolved_oxygen, pH), names_to = "Metric", values_to = "Value")
+
+ggplot(water_quality_long, aes(x = factor(Year), y = Value, fill = factor(Year))) +
+  geom_boxplot(alpha = 0.7) +
+  facet_wrap(~ Metric, scales = "free_y") +
+  labs(title = "Water Quality Metrics (2013 vs 2019)", x = "Year", y = "Value") +
+  scale_fill_manual(values = c("2013" = "blue", "2019" = "orange")) +
+  theme_minimal()
+
+# Correlation Heatmap
+ept_richness <- merged_data %>%
+  filter(Order %in% c("Ephemeroptera", "Plecoptera", "Trichoptera")) %>%
+  group_by(Start_Date, Lake_Code) %>%
+  summarise(EPT_Richness = n_distinct(Order), .groups = "drop")
+
+correlation_data <- merged_data %>%
+  group_by(Start_Date, Lake_Code) %>%
+  slice(1) %>%
+  ungroup() %>%
+  left_join(ept_richness, by = c("Start_Date", "Lake_Code")) %>%
+  select(Temperature_C, Dissolved_oxygen, pH, Veg_Cover, EPT_Richness) %>%
+  drop_na()
+
+cor_matrix <- cor(correlation_data, use = "complete.obs")
+cor_melt <- melt(cor_matrix)
+
+ggplot(cor_melt, aes(Var1, Var2, fill = value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "red", high = "blue", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), name = "Correlation") +
+  labs(title = "Correlation Heatmap: EPT Richness and Environmental Variables") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Predicted vs Actual Plot
+ggplot(predictions, aes(x = Taxa_Richness, y = .pred)) + 
+  geom_point(alpha = 0.5) + 
+  geom_abline(linetype = "dashed", color = "blue") + 
+  labs(x = "Actual Taxa Richness", y = "Predicted", title = "Predicted vs Actual Taxa Richness")
+
 ```
 
