@@ -4,9 +4,12 @@ project:
 
 manuscript:
   article: index.qmd
+  notebooks: 
+    - notebook: index.qmd
 
 format:
   html:
+    self-contained: true
     comments:
       hypothesis: true
   docx: default
