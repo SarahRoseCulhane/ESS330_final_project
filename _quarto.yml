@@ -3,9 +3,7 @@ project:
   output-dir: docs
 
 manuscript:
-  article: index.qmd
-  notebooks: 
-    - notebook: index.qmd
+   article: index.qmd
 
 format:
   html:
