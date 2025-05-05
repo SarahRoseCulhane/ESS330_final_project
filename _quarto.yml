@@ -7,7 +7,7 @@ manuscript:
 
 format:
   html:
-    self-contained: true
+   self-contained: true
     comments:
       hypothesis: true
   docx: default
