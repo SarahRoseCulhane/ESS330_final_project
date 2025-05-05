@@ -3,18 +3,15 @@ project:
   output-dir: docs
 
 manuscript:
-   article: index.qmd
+  article: index.qmd
 
 format:
   html:
-   self-contained: true
+    self-contained: true
     comments:
       hypothesis: true
   docx: default
   jats: default
-
-  # (other formats)
-  # pdf: default
 
 execute:
   freeze: true
