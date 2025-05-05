@@ -1,5 +1,5 @@
 ---
-title: ESS 330 Project Proposals
+title: ESS 330 Final Project
 authors: 
   - name: Sarah Culhane
     affiliation: Colorado State University
