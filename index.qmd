@@ -159,7 +159,9 @@ predictions <- predict(fitted_model, new_data = test_data) %>%
 
 predictions %>%
   metrics(truth = Taxa_Richness, estimate = .pred)
+```
 
+```{r}
 # Predicted vs Actual Plot
 ggplot(predictions, aes(x = Taxa_Richness, y = .pred)) + 
   geom_point(alpha = 0.5) + 
