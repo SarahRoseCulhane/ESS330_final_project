@@ -16,6 +16,14 @@ format:
 execute: 
   echo: true
 ---
+```{r}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.path = "images/"
+)
+```
 
 # Lakes and Ponds Bring The Boys to the Yard
 
