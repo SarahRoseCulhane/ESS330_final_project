@@ -16,6 +16,7 @@ format:
 execute: 
   echo: true
 ---
+
 ```{r}
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -33,9 +34,9 @@ knitr::opts_chunk$set(
 
 Throughout the mythologies of ancient civilizations, rivers are often portrayed as sacred lifelines and mystical forces that breathe life into the land. From the Nile of Egypt to the Ganges in India, rivers shaped the very foundation of human development. The route a river carves through a landscape not only guides the path of its water, but also dictates the types of vegetation that grow alongside it, the diversity of animals that depend on it, and the feasibility of long-term human settlement. The majority of the world’s great cities were born beside rivers, not merely for commerce, which could be achieved from any coast, but for one elemental advantage: rivers carry fresh water. Drinkable water. Or at least, they used to.
 
-In today’s world, the demand for freshwater is greater than ever. Global population growth, expanding agricultural demands, urban sprawl, and climate change are placing unprecedented stress on aquatic ecosystems. Historically, human progress has been closely tied to our ability to manipulate the quantity of water available through irrigation systems, dams, aqueducts, and other technologies (citation?) But as environmental pressures grow, we are now forced to reckon with a second, equally critical dimension: water quality. Just as our ancestors learned to interpret the presence of certain plants and animals as signs of viable water sources, modern ecologists use biological indicators to evaluate the health of freshwater systems. Among the most widely used of these indicators are benthic macroinvertebrates; organisms that live on the bottom of rivers, lakes, and streams and include insects, crustaceans, mollusks, and worms. These organisms are uniquely valuable for biomonitoring due to their varied tolerance to pollutants, their limited mobility (which ties them to local conditions), and their life cycles, which span seasons or years( citation?) One particularly important group of macroinvertebrates used to indicate good water quality is the EPT taxa; Ephemeroptera (mayflies), Plecoptera (stoneflies), and Trichoptera (caddisflies). These taxa are generally sensitive to environmental disturbances, and their presence in high abundance is often correlated with clean, well-oxygenated water. In contrast, a dominance of more pollution-tolerant organisms such as oligochaete worms, leeches, and midge larvae (Chironomidae) is typically a sign of poor water quality and habitat degradation (@McDonald_Mullins_Lewis_1991).
+In today’s world, the demand for freshwater is greater than ever. Global population growth, expanding agricultural demands, urban sprawl, and climate change are placing unprecedented stress on aquatic ecosystems. Historically, human progress has been closely tied to our ability to manipulate the quantity of water available through irrigation systems, dams, aqueducts, and other technologies (\@Yevjevich_1992) But as environmental pressures grow, we are now forced to reckon with a second, equally critical dimension: water quality. Just as our ancestors learned to interpret the presence of certain plants and animals as signs of viable water sources, modern ecologists use biological indicators to evaluate the health of freshwater systems. Among the most widely used of these indicators are benthic macroinvertebrates; organisms that live on the bottom of rivers, lakes, and streams and include insects, crustaceans, mollusks, and worms. These organisms are uniquely valuable for biomonitoring due to their varied tolerance to pollutants, their limited mobility (which ties them to local conditions), and their life cycles, which span seasons or years (\@Gresens_Smith_Sutton-Grier_Kenney_2009). One particularly important group of macroinvertebrates used to indicate good water quality are those in the taxa Ephemeroptera (mayflies), Plecoptera (stoneflies), and Trichoptera (caddisflies). This group is often reffereed to as EPT in biomonitoring, and biological metrics based on EPT are often effective in detecting pollution due to their sensitivity to environmental disturbances (\@barbour1999rapid). Their presence in high abundance is often correlated with clean, well-oxygenated water. In contrast, a dominance of more pollution-tolerant organisms such as oligochaete worms, leeches, and midge larvae (Chironomidae) is typically a sign of poor water quality and habitat degradation (@McDonald_Mullins_Lewis_1991).
 
-Species richness, especially for benthic macroinvertebrates, is influenced by multiple complex factors when it comes to water quality. But some of the most influential factors seem to be Ph, turbidity, dissolved oxygen, and temperature (citation?).
+Species richness, especially for benthic macroinvertebrates, is influenced by multiple complex factors when it comes to water quality. But some of the most influential factors seem to be PH, turbidity, dissolved oxygen, and temperature (*citation?*). Previous studies have shown that dissolved oxygen seems to be especially influential on taxonomic richness and diversity because of both the respiratory requirements of different taxa and their ability to handle low oxygen stress and the increased frequency of hypoxia in many aquatic systems due to anthropocentric activities (conolly_2004).
 
 But water quality is not influenced solely by what occurs within the streambed. The surrounding environment, particularly riparian zones, plays a critical role. Riparian zones are the transitional areas between terrestrial and aquatic ecosystems, typically encompassing the vegetation and soils adjacent to rivers and streams. Though narrow in spatial extent, riparian zones provide disproportionate ecological benefits. They act as natural buffers, filtering out sediments, nutrients, and pollutants before they reach the water body. They also stabilize stream banks, reduce erosion, moderate water temperature through shading, and provide crucial habitat for a wide range of terrestrial and aquatic organisms. As such, the integrity of riparian zones is often used as a secondary, yet equally important, indicator of watershed health (@Sabo2005). Unfortunately, riparian zones are frequently the first casualties of human development. Agricultural expansion, urbanization, logging, and road construction often involve the removal or fragmentation of riparian vegetation. When riparian zones are degraded, their ability to support both terrestrial and aquatic biodiversity diminishes, and the systems they protect become more vulnerable to pollution, sedimentation, and thermal stress. Consequently, monitoring the type and abundance of riparian vegetation can yield valuable insights into the overall ecological condition of a watershed, and by extension, its capacity to support a diverse and healthy macroinvertebrate community.
 
@@ -180,6 +181,7 @@ predicted_vs_actual <- ggplot(predictions, aes(x = Taxa_Richness, y = .pred)) +
 
 print(predicted_vs_actual)
 ```
+
 The predicted vs actual plot showing taxonomic richness does show some slight variance, but the overall fit is fairly linear, providing sufficient evidence that the model chosen is a model of good fit
 
 ```{r}
@@ -196,7 +198,8 @@ insect_order_abundane <- ggplot(order_counts, aes(x = reorder(Order, -Total_Coun
 
 print(insect_order_abundane)
 ```
-According to to the graph above showing total insect count by order in 2013 to 2019, the abundance of insects in the order diptera was the highest in both years, but there was an increse between 2013 and 2019. The abundance of insects in the order Trichoptera, Ephemeroptera, and veneroida, however, decreased from 2013 to 2019.
+
+According to to the graph above showing total insect count by order in 2013 to 2019, the abundance of insects in the order diptera was the highest in both years, and there was an increase between 2013 and 2019. The abundance of insects in the order Trichoptera, Ephemeroptera, and veneroida, however, decreased from 2013 to 2019.
 
 ```{r}
 # Riparian Cover Categories
@@ -211,7 +214,8 @@ riparian_cover <- ggplot(riparian_combined, aes(x = Barren_AreaCcover, fill = fa
 
 print(riparian_cover)
 ```
-According to the graph above, the amount of riparian cover in every category except very heavy (>75%) increased from 2013 to 2019.
+
+According to the graph above, the amount of riparian cover in every category except very heavy (\>75%) increased from 2013 to 2019.
 
 ```{r}
 # Water Quality Box Plots
@@ -229,6 +233,7 @@ water_quality <- ggplot(water_quality_long, aes(x = factor(Year), y = Value, fil
 
 print(water_quality)
 ```
+
 According to the boxplot above, the mean amount of dissolved oxygen, mean pH, and mean temperature all decreased from 2013 to 2019. This reflects an overall decline in water quality in lakes and ponds within Lassen Volcanic National Park.
 
 ```{r}
@@ -260,8 +265,9 @@ correlation_heatmap <- ggplot(cor_melt, aes(Var1, Var2, fill = value)) +
 print(correlation_heatmap)
 
 ```
-According to the correlation heat map above, EPT richness has positive correlations with all of the water quality metrics tested, the strongest correlation being with dissolved oxygen. Vegetation cover, on the other hand, seems to have a slightly negative but close to zero correlation with EPT richness. 
+
+According to the correlation heat map above, EPT richness has positive correlations with all of the water quality metrics tested, the strongest correlation being with dissolved oxygen. Vegetation cover, on the other hand, seems to have a slightly negative but close to zero correlation with EPT richness.
 
 **Discussion**
 
-Results suggest that there was an overall decline in macro invertebrate taxa richness across all orders in the EPT category between 2013 and 2019 in water bodies within Lassen Volcanic National Park. The strong positive correlation between pH, dissolved oxygen, and EPT_score suggests that the decline in pH and dissolved oxygen present in those water bodies may have been partially responsible for the decline in taxa richness. Vegetation present in riparian zones within the park seemed to have increased, according to our analysis, and veg_cover and EPT_score seem to have a negative but close to zero correlation. This finding goes against our hypothesis that more riparian cover would lead to high taxa richness, disproving it. The cause of this is unknown and warrants further research. Going forward, more focused research and data collection needs to be done to find the source of pollution in Lassen Volcanic National Park so that measures can be taken to combat pollution at the source and improve the water quality of water bodies within the park. Limitations of our analysis include the fact that there was a lot of cleaning that had to be done in our dataset, and there was a disproportionate amount of data for each of the national parks and years that data was collected, with some parks and years having significantly more data than others. Crater Lake National Park especially had less data than both Volcanic National Park and Redwood National State Park.
+Results suggest that there was a change in macro invertebrate taxa richness across all orders in the EPT category between 2013 and 2019 in water bodies within Lassen Volcanic National Park. The strong positive correlation between pH, dissolved oxygen, and EPT_score suggests that the decline in pH and dissolved oxygen present in those water bodies may have been partially responsible for the decline in taxa richness. Dissolved oxygen had the strongest correlationship with EPT_score. Results also show that Vegetation present in riparian zones within the park seemed to have increased, according to our analysis, and veg_cover and EPT_score seem to have zero correlation. This finding disproves our hypothesis that more riparian cover would lead to high taxa richness. The cause of this can not be concluded with our results alone and warrants further research. Going forward, more focused research and data collection needs to be done to find the source of pollution in Lassen Volcanic National Park so that measures can be taken to combat pollution at the source and improve the water quality of water bodies within the park. Limitations of our analysis include the fact that there was a lot of cleaning that had to be done in our dataset, and there was a disproportionate amount of data for each of the national parks and years that data was collected, with some parks and years having significantly more data than others. Crater Lake National Park especially had less data than both Volcanic National Park and Redwood National State Park.
