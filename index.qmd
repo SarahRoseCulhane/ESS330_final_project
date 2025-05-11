@@ -181,6 +181,7 @@ predictions <- predict(fitted_model, new_data = test_data) %>%
 predictions %>%
   metrics(truth = Taxa_Richness, estimate = .pred)
 ```
+The R squared Value for our model is 0.998. This is a fairly high value, which suggests that our model is a model of good fit for our observed data. The mean absolute error came out to be 0.0296. This is a fairly low number, which suggest that our model is fairly accurate. 
 
 ```{r}
 # Predicted vs Actual Plot
