@@ -26,9 +26,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Lakes and Ponds Bring The Boys to the Yard
+# Riparian Integrity and Aquatic Biodiversity: Linking Vegetation Condition, Water Quality, and Macroinvertebrate Richness in Lassen Volcanic National Park
 
-### Assessing the Effect of Riparian Zone and Water Quality on Taxonimic Richness
+### A Multivariate Analysis of Stream Ecosystem Health Across Varying Riparian Conditions
+
+**Abstract**
+
+Freshwater ecosystems depend on the integrity of riparian zones and the quality of water to support diverse biological communities. In particular, benthic macroinvertebrates such as Ephemeroptera, Plecoptera, and Trichoptera (EPT taxa) serve as sensitive indicators of aquatic ecosystem health. This study investigates the relationship between riparian vegetation condition, water quality parameters, and macroinvertebrate diversity in Lassen Volcanic National Park using data from the Klamath Network Lakes Monitoring Data Package (2013–2019). By integrating macroinvertebrate, riparian vegetation, and water chemistry datasets, we developed a vegetation cover index and examined its association with EPT richness. Statistical methods included correlation analysis, linear regression, and a random forest regression model to explore predictive relationships. Our findings suggest that higher vegetative cover in riparian zones is positively associated with both EPT richness and dissolved oxygen levels, while degraded sites with barren riparian zones tend to host fewer sensitive taxa. These results emphasize the importance of protecting and restoring riparian vegetation as a strategy for maintaining biodiversity and improving water quality in freshwater systems.
 
 **Introduction**
 
@@ -171,7 +175,9 @@ predictions <- predict(fitted_model, new_data = test_data) %>%
 predictions %>%
   metrics(truth = Taxa_Richness, estimate = .pred)
 ```
-The R-squared value of the model built to predict EPT richness is 0.99774293. This is a fairly high value, suggesting high accuracy for our model is fit for the observed data. The root mean squared error and the mean absolute error values are both fairly low, with the rmse value being at 0.1337429 and the mae value being at 0.02964773. These low values suggest that our model is fairly accurate.
+
+The predicted vs actual plot showing taxonomic richness does show some slight variance, but the overall fit is fairly linear, providing sufficient evidence that the model chosen is a model of good fit
+
 ```{r}
 # Predicted vs Actual Plot
 predicted_vs_actual <- ggplot(predictions, aes(x = Taxa_Richness, y = .pred)) + 
@@ -266,8 +272,10 @@ print(correlation_heatmap)
 
 ```
 
-According to the correlation heat map above, EPT richness has positive correlations with all of the water quality metrics tested, the strongest correlation being with dissolved oxygen. Vegetation cover, on the other hand, seems to have a slightly negative but close to zero correlation with EPT richness.
+According to the correlation heat map above, EPT richness has positive correlations with all of the water quality metrics tested, the strongest correlation being with dissolved oxygen. Vegetation cover, on the other hand, seems to have zero correlation with EPT richness. However, vegetation cover did seem to have a positive correlation with dissolved oxygen and a negative correlation with pH. This suggests that vegetation cover does have an indirect relationship with EPT richness.
 
 **Discussion**
 
-Results suggest that there was a change in macro invertebrate taxa richness across all orders in the EPT category between 2013 and 2019 in water bodies within Lassen Volcanic National Park. The strong positive correlation between pH, dissolved oxygen, and EPT_score suggests that the decline in pH and dissolved oxygen present in those water bodies may have been partially responsible for the decline in taxa richness. Dissolved oxygen had the strongest correlationship with EPT_score. Results also show that Vegetation present in riparian zones within the park seemed to have increased, according to our analysis, and veg_cover and EPT_score seem to have zero correlation. This finding disproves our hypothesis that more riparian cover would lead to high taxa richness. The cause of this can not be concluded with our results alone and warrants further research. Going forward, more focused research and data collection needs to be done to find the source of pollution in Lassen Volcanic National Park so that measures can be taken to combat pollution at the source and improve the water quality of water bodies within the park. Limitations of our analysis include the fact that there was a lot of cleaning that had to be done in our dataset, and there was a disproportionate amount of data for each of the national parks and years that data was collected, with some parks and years having significantly more data than others. Crater Lake National Park especially had less data than both Volcanic National Park and Redwood National State Park.
+Results suggest that there was a change in macroinvertebrate taxa richness across all orders in the EPT category between 2013 and 2019 in water bodies within Lassen Volcanic National Park. The strong positive correlation between pH, dissolved oxygen, and EPT_score suggests that the decline in pH and dissolved oxygen present in those water bodies may have been partially responsible for the decline in taxa richness. Dissolved oxygen had the strongest correlation with EPT_score. Results also show that vegetation present in riparian zones within the park seemed to have increased, according to our analysis, and veg_cover and EPT_score seem to have zero correlation. This finding disproves our hypothesis that more riparian cover would lead to high taxa richness. The cause of this cannot be concluded with our results alone and warrants further research.
+
+Although vegetation is often considered a useful indicator of ecosystem health, its relationship with water quality and biological condition is influenced by many interacting processes. As Dosskey (2010) suggests, understanding these underlying mechanisms is essential to accurately use vegetation condition as an indicator and to realistically assess how effective vegetation restoration might be in improving water quality. Going forward, more focused research and data collection needs to be done to find the source of pollution in Lassen Volcanic National Park so that measures can be taken to combat pollution at the source and improve the water quality of water bodies within the park. Limitations of our analysis include the fact that there was a lot of cleaning that had to be done in our dataset, and there was a disproportionate amount of data for each of the national parks and years that data was collected, with some parks and years having significantly more data than others. Crater Lake National Park especially had less data than both Volcanic National Park and Redwood National State Park.
