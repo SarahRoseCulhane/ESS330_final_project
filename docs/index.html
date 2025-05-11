@@ -3463,6 +3463,7 @@ Attaching package: &#39;reshape2&#39;</code></pre>
 3 mae     standard      0.0296</code></pre>
 </div>
 </div>
+<p>The R squared Value for our model is 0.998. This is a fairly high value, which suggests that our model is a model of good fit for our observed data. The mean absolute error came out to be 0.0296. This is a fairly low number, which suggest that our model is fairly accurate.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted vs Actual Plot</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>predicted_vs_actual <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(predictions, <span class="fu">aes</span>(<span class="at">x =</span> Taxa_Richness, <span class="at">y =</span> .pred)) <span class="sc">+</span> </span>
@@ -4038,7 +4039,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","closeEffect":"zoom","loop":false,"descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom","openEffect":"zoom","loop":false});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
