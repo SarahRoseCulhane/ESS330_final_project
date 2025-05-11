@@ -73,6 +73,12 @@ All analyses were conducted in RStudio using the tidymodels, tidyr, dplyr, and g
 **Results**
 
 ```{r}
+```
+
+```{r}
+```
+
+```{r}
 # Load Libraries
 library(ggplot2)
 library(dplyr)
@@ -175,8 +181,6 @@ predictions <- predict(fitted_model, new_data = test_data) %>%
 predictions %>%
   metrics(truth = Taxa_Richness, estimate = .pred)
 ```
-
-The predicted vs actual plot showing taxonomic richness does show some slight variance, but the overall fit is fairly linear, providing sufficient evidence that the model chosen is a model of good fit
 
 ```{r}
 # Predicted vs Actual Plot
